@@ -1,0 +1,14 @@
+/*
+ * 全站 CSS 层级顺序必须在任何样式表之前声明。
+ * 该文件必须是 main.tsx 的第一个样式 import：Mantine 的 styles.layer.css
+ * 一加载就会创建 @layer mantine，之后再声明顺序就晚了（Tailwind Preflight
+ * 会排到 Mantine 后面，把按钮/输入框样式重置成透明）。
+ *
+ * 顺序含义：
+ *   theme       Tailwind token
+ *   base        Tailwind Preflight（先于 Mantine，不能打穿组件样式）
+ *   mantine     Mantine 组件样式
+ *   components  本项目组件类
+ *   utilities   Tailwind / 本项目工具类（最后覆盖）
+ */
+@layer theme, base, mantine, components, utilities;

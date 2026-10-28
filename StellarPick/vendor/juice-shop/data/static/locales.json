@@ -1,0 +1,19 @@
+[
+  {
+    "key": "en",
+    "icons": [
+      "gb",
+      "us"
+    ],
+    "shortKey": "EN",
+    "lang": "English"
+  },
+  {
+    "key": "zh_CN",
+    "icons": [
+      "cn"
+    ],
+    "shortKey": "CN",
+    "lang": "中国"
+  }
+]

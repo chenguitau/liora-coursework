@@ -1,0 +1,31 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# Rsbuild output and browser tests
+/dist/
+/test-results/
+/playwright-report/
+
+# misc
+.DS_Store
+*.pem
+*.sh
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo

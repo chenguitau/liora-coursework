@@ -1,0 +1,154 @@
+// Package config loads runtime configuration from a JSON file, with environment
+// variables taking precedence. The business database is SQLite by default.
+package config
+
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+)
+
+// Database contains the SQLite path. Legacy PostgreSQL fields are retained for
+// compatibility and are ignored by the SQLite runtime.
+type Database struct {
+	Path     string `json:"path"`
+	DSN      string `json:"dsn"`
+	Host     string `json:"host"`
+	Port     int    `json:"port"`
+	User     string `json:"user"`
+	Password string `json:"password"`
+	DBName   string `json:"dbname"`
+	SSLMode  string `json:"sslmode"`
+}
+
+// SQLitePath resolves the local business database. PostgreSQL settings from an
+// older installation are intentionally ignored; that database is left intact.
+// Relative configured paths are anchored to the config file, while the default
+// follows the application's data directory (including the -data flag).
+func SQLitePath(dataDir string) (path, source string, err error) {
+	path = strings.TrimSpace(os.Getenv("LIORA_SQLITE_PATH"))
+	if path != "" {
+		source = "环境变量 LIORA_SQLITE_PATH"
+	} else if path = strings.TrimSpace(Load().Database.Path); path != "" {
+		source = "配置文件 " + Path() + " (database.path)"
+		if !filepath.IsAbs(path) && path != ":memory:" {
+			path = filepath.Join(filepath.Dir(Path()), path)
+		}
+	} else {
+		if dataDir == "" {
+			dataDir = filepath.Join(BaseDir(), "data")
+		}
+		path, source = filepath.Join(dataDir, "liora.db"), "默认 SQLite 数据库"
+	}
+	if strings.Contains(path, "://") || strings.HasPrefix(path, "file:") {
+		return "", source, fmt.Errorf("database.path must be a local SQLite file path")
+	}
+	if path != ":memory:" {
+		path, err = filepath.Abs(path)
+	}
+	return path, source, err
+}
+
+// Config is the on-disk config file shape.
+type Config struct {
+	Database Database `json:"database"`
+	SkillDir string   `json:"skill_dir"`
+}
+
+// BaseDir is the directory that anchors all runtime artifacts (config.json and
+// the data/ store). It is the directory the running binary lives in, so a
+// distributed executable keeps its files next to itself on any OS (Windows,
+// Linux, …) regardless of the working directory it is launched from.
+//
+// When launched via `go run`, the binary is throwaway: it sits either in a temp
+// build dir (cache miss → fresh link) OR straight inside the Go build cache
+// (cache hit → run from $GOCACHE/.../...-d). We detect both and fall back to the
+// current working directory so dev artifacts (data/, transcripts) and config
+// resolve against the project dir, not the throwaway binary's location.
+func BaseDir() string {
+	exe, err := os.Executable()
+	if err != nil {
+		return "."
+	}
+	dir := filepath.Dir(exe)
+	if isGoRunDir(dir) {
+		return "." // throwaway `go run` binary → use CWD
+	}
+	return dir
+}
+
+// isGoRunDir reports whether dir is where `go run` parked its executable: under
+// the system temp dir (cache miss), or anywhere inside a Go build cache
+// (…/go-build/…, the cache-hit case — NOT under os.TempDir(), which is why the
+// old temp-only check failed intermittently). In both cases the binary is
+// throwaway, so config/data must resolve against the CWD.
+func isGoRunDir(dir string) bool {
+	if tmp := os.TempDir(); tmp != "" {
+		if rel, err := filepath.Rel(tmp, dir); err == nil && rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+			return true
+		}
+	}
+	for _, seg := range strings.Split(filepath.ToSlash(dir), "/") {
+		if seg == "go-build" {
+			return true
+		}
+	}
+	return false
+}
+
+// Path returns the config file path. Resolution order:
+//  1. env LIORA_CONFIG (explicit override)
+//  2. ./config.json in the current working directory (running from the project
+//     dir — robust no matter where `go run` placed the temp/cached binary)
+//  3. config.json next to the executable (a distributed binary keeps it beside)
+//
+// The first existing file wins. If none exist, the CWD path is returned so the
+// "not found" message points at the project dir the user most likely expected.
+func Path() string {
+	if v := strings.TrimSpace(os.Getenv("LIORA_CONFIG")); v != "" {
+		return v
+	}
+	var candidates []string
+	if cwd, err := os.Getwd(); err == nil {
+		candidates = append(candidates, filepath.Join(cwd, "config.json"))
+	}
+	candidates = append(candidates, filepath.Join(BaseDir(), "config.json"))
+	for _, c := range candidates {
+		if _, err := os.Stat(c); err == nil {
+			return c
+		}
+	}
+	return candidates[0]
+}
+
+// Load reads and parses the config file. A missing/unreadable file yields a zero
+// Config (so callers fall back to defaults) rather than an error.
+func Load() Config {
+	var c Config
+	b, err := os.ReadFile(Path())
+	if err != nil {
+		return c
+	}
+	_ = json.Unmarshal(b, &c)
+	return c
+}
+
+// SkillDir returns the skill root directory with precedence:
+//
+//	env LIORA_SKILL_DIR  >  config file (skill_dir)  >  BaseDir()/skills
+//
+// The directory is created if it does not exist.
+func SkillDir() string {
+	var d string
+	if v := strings.TrimSpace(os.Getenv("LIORA_SKILL_DIR")); v != "" {
+		d = v
+	} else if v := strings.TrimSpace(Load().SkillDir); v != "" {
+		d = v
+	} else {
+		d = filepath.Join(BaseDir(), "skills")
+	}
+	_ = os.MkdirAll(d, 0o755)
+	return d
+}

@@ -1,0 +1,9 @@
+{
+  "_comment": "复制为 config.json；也可通过 LIORA_CONFIG 指定路径。模型等配置在应用内或通过 LIORA_LLM_* 设置。",
+  "_comment_database": "默认 data/liora.db；相对 path 以配置文件目录为基准。LIORA_SQLITE_PATH 优先。",
+  "database": {
+    "path": "data/liora.db"
+  },
+  "_comment_skill_dir": "留空使用可执行文件旁的 skills/；可通过 LIORA_SKILL_DIR 覆盖。",
+  "skill_dir": ""
+}

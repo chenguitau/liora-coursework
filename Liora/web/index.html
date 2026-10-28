@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="<%= description %>" />
+    <title><%= title %></title>
+    <link rel="icon" href="/liora-icon.png" />
+    <link rel="apple-touch-icon" href="/liora-icon.png" />
+    <!-- 必须早于所有样式表：Mantine 的 styles.layer.css 会先创建 @layer mantine，
+         顺序一旦被它抢跑，Tailwind Preflight 就会排到 Mantine 之后并重置组件样式。 -->
+    <style>@layer theme, base, mantine, components, utilities;</style>
+    <script><%= themeBootScript %></script>
+  </head>
+  <body class="min-h-screen bg-background text-foreground antialiased">
+    <div id="root"></div>
+  </body>
+</html>

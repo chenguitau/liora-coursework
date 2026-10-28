@@ -1,0 +1,23 @@
+# 依赖与构建产物
+node_modules/
+dist/
+.angular/
+build/
+
+# 运行数据（Liora 的 SQLite 库、靶场的运行时状态与上传文件）
+Liora/data/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+StellarPick/vendor/juice-shop/data/*.sqlite*
+StellarPick/vendor/juice-shop/data/lab-runtime.json
+StellarPick/vendor/juice-shop/uploads/
+.env
+.env.local
+
+# 日志与系统文件
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini

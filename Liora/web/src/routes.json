@@ -1,0 +1,22 @@
+{
+  "home": "/",
+  "login": "/login",
+  "setup": "/setup",
+  "Dashboard": "/dashboard",
+  "FunctionAssets": "/function/assets",
+  "FunctionConversationsDetail": "/function/conversations/detail",
+  "FunctionFindingsDetail": "/function/findings/detail",
+  "FunctionFindings": "/function/findings",
+  "FunctionTasksDetail": "/function/tasks/detail",
+  "FunctionTasks": "/function/tasks",
+  "SystemAgentsDetail": "/system/agents/detail",
+  "SystemAgents": "/system/agents",
+  "SystemInterceptApprovals": "/system/intercept/approvals",
+  "SystemIntercept": "/system/intercept",
+  "SystemLlm": "/system/llm",
+  "SystemLogs": "/system/logs",
+  "SystemMcp": "/system/mcp",
+  "SystemSettings": "/system/settings",
+  "SystemSkills": "/system/skills",
+  "SystemTools": "/system/tools"
+}

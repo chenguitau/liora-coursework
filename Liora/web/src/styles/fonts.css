@@ -1,0 +1,42 @@
+@font-face {
+  font-family: "Geist";
+  src: url("../assets/fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../assets/fonts/GeistMono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Geist Pixel Square";
+  src: url("../assets/fonts/GeistPixel-Square.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+:root {
+  --font-geist: "Geist", system-ui, sans-serif;
+  --font-geist-mono: "Geist Mono", "PingFang SC", "Microsoft YaHei", ui-monospace, monospace;
+  --font-geist-pixel-square: "Geist Pixel Square", monospace;
+}
+
+/* The first revision used local Geist files for these font choices. */
+:root {
+  --font-inter: var(--font-geist);
+  --font-noto-sans: var(--font-geist);
+  --font-roboto: var(--font-geist);
+  --font-outfit: var(--font-geist);
+  --font-dm-sans: var(--font-geist);
+  --font-nunito-sans: var(--font-geist);
+  --font-figtree: var(--font-geist);
+  --font-raleway: var(--font-geist);
+  --font-public-sans: var(--font-geist);
+  --font-noto-serif: var(--font-geist);
+  --font-roboto-slab: var(--font-geist);
+  --font-merriweather: var(--font-geist);
+  --font-lora: var(--font-geist);
+  --font-playfair-display: var(--font-geist);
+  --font-jetbrains-mono: var(--font-geist-mono);
+}

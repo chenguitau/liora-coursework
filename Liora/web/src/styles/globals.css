@@ -1,0 +1,1017 @@
+/* 层级顺序声明在 styles/layers.css（必须最先加载）。这里的规则分布：
+   base = Preflight 兜底；components = 本项目组件类；utilities = 覆盖层。 */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./fonts.css";
+
+/* Theme presets（brutalist / soft-pop / tangerine）已停用：
+   全站视觉只由 Mantine 主题 + 下方 Liora token 决定；预设样式文件已删除，
+   仅保留偏好键以兼容旧 cookie。 */
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-text: var(--primary-text);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-heading: var(--font-sans);
+  --font-sans: var(--font-sans);
+}
+
+/* Liora console theme — 冷灰中性表面 + 高对比品牌蓝。
+   品牌与语义色仅用于关键操作和状态，容器、表头及描边保持克制的中性层级。
+   深色使用分层 Slate 表面。 */
+:root {
+  --radius: 0.5rem;
+  /* 1. 基底去蓝化：采用极干净的冷灰白（Slate-50 偏白），突显纯白卡片 */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  /* 2. 品牌主色：从偏粉亮的 #2f8df5 收敛为更具安全专业感的皇家蓝 #2563eb */
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --primary-text: #1d4ed8;
+  --brand: #2563eb;
+  --brand-soft: rgba(37, 99, 235, 0.08);
+
+  /* 3. 中性次级表面：彻底告别发蓝的 #e9f1f8 / #eaf2f9，改用冷灰阶 Slate */
+  --secondary: #f1f5f9;
+  --secondary-foreground: #334155;
+  --muted: #f1f5f9;
+  --muted-foreground: #5f6f85;
+  --surface-muted: #f4f6f9;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
+
+  /* 4. 描边与输入框：使用高质感 hairline 冷灰描边，不再用浅蓝描边 */
+  --border: #e2e8f0;
+  --input: #cbd5e1;
+  --ring: #2563eb;
+
+  /* 图表色板：蓝主轴连续色阶，teal/amber 做语义对照 */
+  --chart-1: #2563eb;
+  --chart-2: #3b82f6;
+  --chart-3: #0d9488;
+  --chart-4: #d97706;
+  --chart-5: #6366f1;
+  --sidebar: #0f172a;
+  --sidebar-foreground: #94a3b8;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #f8fafc;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #2563eb;
+
+  /* 5. 语义色：保持清晰锐利的 WCAG AA 对比度 */
+  --destructive: #be123c; /* rose-700：rose-600 在浅底小字上只有 4.49:1 */
+  --destructive-foreground: #ffffff;
+  --success: #059669;
+  --success-foreground: #047857;
+  --warning: #d97706;
+  --warning-foreground: #b45309;
+  --info: #0284c7;
+  --info-foreground: #0369a1;
+
+  /* 6. 阴影升级：对齐 FloatingDock 的精致多层投影，配合 1px 实色微描边 */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-raised: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 4px 10px -4px rgba(15, 23, 42, 0.04);
+  --shadow-popover: 0 12px 32px -4px rgba(15, 23, 42, 0.12), 0 2px 6px -1px rgba(15, 23, 42, 0.06);
+
+  /* 7. 表头底色统一口径 */
+  --table-head-bg: #f8fafc;
+
+  /* fonts */
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
+}
+
+.dark {
+  --background: #0b1220; /* 深海军蓝 */
+  --foreground: #e8eef6; /* 带蓝的浅色正文 */
+  --card: #101b2e;
+  --card-foreground: #e8eef6;
+  --popover: #16233a; /* 浮层比卡片亮一档 */
+  --popover-foreground: #e8eef6;
+  --primary: #38bdf8; /* sky-400 */
+  --primary-foreground: #082f49; /* sky-950，亮底上用深字 */
+  --secondary: #16233a;
+  --secondary-foreground: #c3d3e6; /* 蓝灰 300 档 */
+  --muted: #16233a;
+  --muted-foreground: #8fa6c2; /* 蓝灰次要文字 */
+  --accent: #1b2c47; /* hover 层 */
+  --accent-foreground: #bae6fd; /* sky-200 */
+  --destructive: #fb7185; /* rose-400 */
+  --border: #1f2d44;
+  --input: #2a3a55;
+  --ring: #38bdf8;
+  --chart-1: #38bdf8; /* sky-400 */
+  --chart-2: #60a5fa; /* blue-400 */
+  --chart-3: #2dd4bf; /* teal-400 */
+  --chart-4: #fbbf24; /* amber-400 */
+  --chart-5: #818cf8; /* indigo-400 */
+  --sidebar: #0a101c; /* 比 background 更深半档 */
+  --sidebar-foreground: #8fa6c2;
+  --sidebar-primary: #38bdf8;
+  --sidebar-primary-foreground: #082f49;
+  --sidebar-accent: #16233a;
+  --sidebar-accent-foreground: #dbe7f3;
+  --sidebar-border: rgba(255, 255, 255, 0.09);
+  --sidebar-ring: #38bdf8;
+  --success: #34d399; /* emerald-400 */
+  --primary-text: #7dd3fc; /* sky-300，深底文字档 */
+  --success-foreground: #a7f3d0; /* emerald-200 */
+  --warning: #fbbf24; /* amber-400 */
+  --warning-foreground: #fde68a; /* amber-200 */
+  --info: #38bdf8;
+  --info-foreground: #bae6fd; /* sky-200 */
+  --brand: #38bdf8;
+  --brand-soft: rgba(56, 189, 248, 0.14);
+  --surface-muted: #0f1929; /* 卡片与背景之间的中间层 */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-raised: 0 12px 32px -16px rgba(0, 0, 0, 0.6);
+  --shadow-popover: 0 16px 36px -4px rgba(0, 0, 0, 0.5), 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+  --table-head-bg: #131f33;
+}
+
+/* ── Mantine ↔ Liora token 桥接 ─────────────────────────────────
+   全站只保留一套颜色/字体/圆角来源：上方 :root / .dark 的 Liora token。
+   Mantine 的原生变量全部指向它们，明暗切换时不会出现「.dark 已变、
+   data-mantine-color-scheme 还是旧值」的两套主题不同步。 */
+:root {
+  --mantine-color-body: var(--background);
+  --mantine-color-text: var(--foreground);
+  --mantine-color-bright: var(--foreground);
+  --mantine-color-dimmed: var(--muted-foreground);
+  --mantine-color-placeholder: var(--muted-foreground);
+  --mantine-color-anchor: var(--primary);
+  --mantine-color-default: var(--card);
+  --mantine-color-default-color: var(--foreground);
+  --mantine-color-default-border: var(--border);
+  --mantine-color-default-hover: var(--accent);
+  --mantine-color-disabled: var(--muted);
+  --mantine-color-disabled-color: var(--muted-foreground);
+  --mantine-color-error: var(--destructive);
+  --mantine-font-family: var(--font-sans), "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --mantine-font-family-monospace: var(--font-mono), ui-monospace, monospace;
+  --mantine-radius-default: var(--radius);
+}
+
+/* Mantine 在构建时用 getContrastColor 把主色上的文字算成白色，感知不到
+   Liora 深色主色 sky-400 需要深字。
+   用 html[...] 提高一级特异性，压过 Mantine 注入的 :root[data-mantine-color-scheme]。 */
+html:root[data-mantine-color-scheme="light"],
+html:root[data-mantine-color-scheme="dark"] {
+  --mantine-primary-color-contrast: var(--primary-foreground);
+}
+
+/* Mantine 深色下把 light 变体的文字算成 -0 档（近白），状态徽章会一片惨白，
+   与全站「深色文字用 -300/-400 档」的约定不一致。这里按语义色统一压到 -300。 */
+html:root[data-mantine-color-scheme="dark"] {
+  --mantine-color-blue-light-color: #7dd3fc;
+  --mantine-color-green-light-color: #6ee7b7;
+  --mantine-color-yellow-light-color: #fcd34d;
+  --mantine-color-red-light-color: #fda4af;
+  --mantine-color-orange-light-color: #fdba74;
+  --mantine-color-violet-light-color: #c4b5fd;
+  --mantine-color-teal-light-color: #5eead4;
+  --mantine-color-gray-light-color: #cbd5e1;
+}
+
+/* 浅色下 Mantine 的 green-6 / yellow-6 / gray-6 压在 10% 同色底上只有 1.7–3.0:1，
+   远低于 AA。改用 Liora 语义文字档（与 toneClasses 的 600/700 档同源）。 */
+html:root[data-mantine-color-scheme="light"] {
+  --mantine-color-blue-light-color: var(--primary-text);
+  --mantine-color-green-light-color: var(--success-foreground);
+  --mantine-color-yellow-light-color: #92400e;
+  --mantine-color-red-light-color: #be123c;
+  --mantine-color-orange-light-color: #9a3412;
+  --mantine-color-violet-light-color: #6d28d9;
+  --mantine-color-teal-light-color: #0f766e;
+  --mantine-color-gray-light-color: #475569;
+}
+
+/* ── 深色表面层级对齐 Liora token ─────────────────────────────
+   Mantine 的 Card/Paper 默认用 dark-6、Modal 用 body、Menu 用 dark-6，
+   与这里的 --card / --popover 不是同一套层级：深色下卡片会比浮层亮，
+   弹窗反而和页面同色。这里只把「大表面」按 token 归位；组件内部仍保留
+   dark-6 作为输入框/代码块/悬停的「抬升一档」。
+   放在 components 层：仍能压过 @layer mantine，但页面上的 bg-* 工具类
+   仍在 utilities 层，可以按需覆盖（例如 SeverityChips 的 Paper）。 */
+@layer components {
+  .dark .mantine-Card-root,
+  .dark .mantine-Paper-root {
+    background-color: var(--card);
+    /* Card 的 withBorder 实际读 dark-4（#334155）；统一回 hairline 描边令牌。 */
+    --paper-border-color: var(--border);
+  }
+
+  .dark .mantine-Modal-content,
+  .dark .mantine-Drawer-content,
+  .dark .mantine-Menu-dropdown,
+  .dark .mantine-Popover-dropdown,
+  .dark .mantine-Combobox-dropdown {
+    background-color: var(--popover);
+  }
+
+  /* 表格斑马纹：dark-6 与 Card 同色时条纹会消失，改用比卡片暗一档的中间层。
+     注意 Mantine 8 的 Table rootSelector 是 <table>，类名是 mantine-Table-table。 */
+  .dark .mantine-Table-table {
+    --table-striped-color: var(--surface-muted);
+  }
+
+  /* Mantine 深色 Tooltip 默认是浅灰底黑字，和深色控制台反差过大；
+     统一到浮层令牌。Dock / 顶栏仍用 .dock-tooltip 的玻璃样式覆盖。 */
+  .dark .mantine-Tooltip-tooltip {
+    --tooltip-bg: var(--popover);
+    --tooltip-color: var(--popover-foreground);
+  }
+
+  /* 菜单项悬停默认 dark-4（#334155）比卡片亮太多；改用 accent 层。 */
+  .dark .mantine-Menu-item {
+    --menu-item-hover: var(--accent);
+  }
+
+  /* 浅色 NavLink 激活项是 blue-600 压在 10% 主色底上（约 4.49:1），
+     改用更深的 --primary-text 文字档。 */
+  :root:not(.dark) .mantine-NavLink-root[data-active],
+  :root:not(.dark) .mantine-NavLink-root[aria-current="page"] {
+    --nl-color: var(--primary-text);
+  }
+
+  /* ── Mantine 主色前景修正 ─────────────────────────────────────
+     Tabs pills / Checkbox / Radio 不走 variantColorResolver，前景写死成 white。
+     深色主色是 sky-400，白字/白勾只有 2.3–2.99:1；这里统一改用
+     --primary-foreground（sky-950）。Tabs pills 的激活项在页面里用
+     data-[active]:text-primary-foreground 覆盖（见发现页与详情页）。 */
+  .dark .mantine-Checkbox-root[data-variant="filled"] {
+    --checkbox-icon-color: var(--primary-foreground);
+  }
+
+  .dark .mantine-Radio-root {
+    --radio-icon-color: var(--primary-foreground);
+  }
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans), "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  }
+  html {
+    @apply font-sans;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 22%, transparent);
+  }
+  /* Slim, unobtrusive scrollbars for the dense console views.
+     默认整条透明：只保留 thin 的轨道宽度，滚动条出现/消失时内容不会横向回流；
+     真正滚动时再由 html[data-scrolling] 换成可见滑块，属性由
+     lib/scrollbar-autohide.ts 在捕获阶段监听 scroll 事件维护。 */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+  /* html 自己的滚动条也是原生滚动条，必须单独列出：
+     后代选择器 html[data-scrolling] * 只覆盖内层容器，不含 <html> 本身。 */
+  html[data-scrolling],
+  html[data-scrolling] * {
+    scrollbar-color: color-mix(in srgb, var(--muted-foreground) 30%, transparent) transparent;
+  }
+}
+
+@layer components {
+  .app-card {
+    @apply rounded-xl border border-border/60 bg-card text-card-foreground;
+    box-shadow: var(--shadow-card);
+  }
+
+  .app-card-hover {
+    @apply transition-shadow;
+  }
+  .app-card-hover:hover {
+    box-shadow: var(--shadow-raised);
+  }
+
+  .app-muted-panel {
+    @apply rounded-lg border border-border/70 bg-surface-muted;
+  }
+
+  .app-divider {
+    @apply h-px w-full bg-border;
+  }
+
+  .app-chip {
+    @apply inline-flex items-center gap-1.5 rounded-md border border-border/50 bg-muted/70 px-2 py-0.5 text-xs font-medium text-muted-foreground;
+  }
+
+  .app-focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/45 focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  .app-kbd {
+    @apply inline-flex h-5 min-w-5 items-center justify-center rounded-md border border-border bg-surface-muted px-1 font-mono text-[10px] font-medium text-muted-foreground;
+  }
+
+  .app-grid-bg {
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--border) 55%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--border) 55%, transparent) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+}
+
+@layer utilities {
+  /* 横向可滚动的页签条/工具条：隐藏滚动条但保留滚动能力。
+     任务详情页签条使用了这个类；Tailwind 没有内置实现，必须在这里定义。 */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 与 Mantine Card 的实际表面一致：light = white，dark = --card。
+     固定列/吸顶表头必须使用不透明表面，否则横向滚动时下层内容会透出；
+     直接写 bg-card 在深色下会比 Card 暗一档，形成竖带。 */
+  .bg-card-surface {
+    background-color: var(--mantine-color-white);
+  }
+  /* :where() 把深色选择器压到 (0,1,0)，让 group-hover 的悬停底色 (0,2,0) 能盖过它；
+     否则固定列在深色下悬停时仍是卡片色，与整行 hover 色脱节。 */
+  :where(.dark) .bg-card-surface {
+    background-color: var(--card);
+  }
+
+  html[data-font="inter"] body {
+    --font-sans: var(--font-inter);
+  }
+  html[data-font="notoSans"] body {
+    --font-sans: var(--font-noto-sans);
+  }
+  html[data-font="nunitoSans"] body {
+    --font-sans: var(--font-nunito-sans);
+  }
+  html[data-font="figtree"] body {
+    --font-sans: var(--font-figtree);
+  }
+  html[data-font="roboto"] body {
+    --font-sans: var(--font-roboto);
+  }
+  html[data-font="geist"] body {
+    --font-sans: var(--font-geist);
+  }
+  html[data-font="raleway"] body {
+    --font-sans: var(--font-raleway);
+  }
+  html[data-font="dmSans"] body {
+    --font-sans: var(--font-dm-sans);
+  }
+  html[data-font="publicSans"] body {
+    --font-sans: var(--font-public-sans);
+  }
+  html[data-font="outfit"] body {
+    --font-sans: var(--font-outfit);
+  }
+  html[data-font="geistMono"] body {
+    --font-sans: var(--font-geist-mono);
+  }
+  html[data-font="geistPixelSquare"] body {
+    --font-sans: var(--font-geist-pixel-square);
+  }
+  html[data-font="jetBrainsMono"] body {
+    --font-sans: var(--font-jetbrains-mono);
+  }
+  html[data-font="notoSerif"] body {
+    --font-sans: var(--font-noto-serif);
+  }
+  html[data-font="robotoSlab"] body {
+    --font-sans: var(--font-roboto-slab);
+  }
+  html[data-font="merriweather"] body {
+    --font-sans: var(--font-merriweather);
+  }
+  html[data-font="lora"] body {
+    --font-sans: var(--font-lora);
+  }
+  html[data-font="playfairDisplay"] body {
+    --font-sans: var(--font-playfair-display);
+  }
+}
+
+html {
+  overscroll-behavior: none;
+}
+
+.disable-transitions * {
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+[data-print-root] {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: Letter;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 8.5in !important;
+    height: 11in !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body > *:not([data-print-root]) {
+    display: none !important;
+  }
+
+  [data-print-root] {
+    display: block !important;
+    width: 8.5in !important;
+    height: 11in !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    background: white !important;
+  }
+
+  [data-print-root] [data-print-paper] {
+    width: 8.5in !important;
+    height: 11in !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+
+  [data-print-root] [data-print-paper],
+  [data-print-root] [data-print-paper] * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
+
+/* ============ 统一动效令牌（DESIGN-SPEC，供全站复用；不动既有变量） ============ */
+@layer utilities {
+  /* 淡入：150ms 微反馈 */
+  .animate-fade-in {
+    animation: liora-fade-in 150ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* 上浮淡入：250ms 常规进场 */
+  .animate-slide-up {
+    animation: liora-slide-up 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* 缩放淡入：250ms 弹层进场 */
+  .animate-scale-in {
+    animation: liora-scale-in 250ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* 呼吸：仅「运行中」实时状态点 */
+  .animate-breathe {
+    animation: liora-breathe 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+
+  /* 阶梯延迟（与上述动画类叠加，实现逐项进场） */
+  .motion-delay-1 {
+    animation-delay: 75ms;
+  }
+  .motion-delay-2 {
+    animation-delay: 150ms;
+  }
+  .motion-delay-3 {
+    animation-delay: 250ms;
+  }
+
+  /* 骨架屏扫光：深浅主题自适应（color-mix 取前景色低透明度高光） */
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+    background-color: color-mix(in srgb, var(--muted) 85%, var(--background));
+  }
+  .skeleton-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--foreground) 8%, transparent), transparent);
+    animation: liora-shimmer 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+}
+
+@keyframes liora-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes liora-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes liora-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes liora-breathe {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes liora-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* 显式兜底：reduced-motion 下关闭本层全部动效 */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-up,
+  .animate-scale-in,
+  .animate-breathe,
+  .skeleton-shimmer::after {
+    animation: none;
+  }
+}
+
+/* ============ 排版 token 与工具类（REFINE-SPEC 二 / 三；仅追加，不改既有变量） ============ */
+:root {
+  /* 字号阶梯：页面标题 18 / 区块标题 13 / 正文 13 / 次要说明 12 */
+  --ui-text-page-title: 18px;
+  --ui-text-section-title: 13px;
+  --ui-text-body: 13px;
+  --ui-text-meta: 12px;
+  --ui-leading-tight: 1.25;
+  --ui-leading-body: 1.5;
+  /* 间距节奏：页面纵向 gap-6、卡片内 p-5、表格单元格 px-4 py-3 */
+  --ui-gap-page: 1.5rem;
+  --ui-space-card: 1.25rem;
+  --ui-row-height: 2.75rem;
+  --ui-control-height: 2.25rem;
+  --ui-control-height-sm: 2rem;
+  /* 唯一允许的卡片描边与圆角（与 Card 组件的 rounded-xl 对齐） */
+  --ui-border-soft: color-mix(in srgb, var(--border) 60%, transparent);
+  --ui-radius-card: calc(var(--radius) + 4px);
+}
+
+@layer components {
+  /* 统一行内图标：lucide 默认 24px，在 32px 按钮里会把文字挤到重叠。
+     data-icon 只负责尺寸与行内间距，显式 size-* 工具类仍可覆盖。 */
+  [data-icon] {
+    /* Tailwind preflight 把 svg 设成 display:block；这里补回行内盒，
+       否则放进行内文本容器（如 Tabs.Tab 的 tabLabel span）时图标会独占一行。 */
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    vertical-align: -0.125em;
+  }
+
+  [data-icon="inline-start"] {
+    margin-inline-end: 0.4em;
+  }
+
+  [data-icon="inline-end"] {
+    margin-inline-start: 0.4em;
+  }
+
+  /* 没有 data-icon 的裸图标（如 <EyeIcon />）也按 1em 收敛，避免 24px 图标撑爆紧凑按钮。
+     显式 size-* 工具类在 utilities 层，仍可覆盖。 */
+  .mantine-Button-root svg,
+  .mantine-ActionIcon-root svg,
+  [data-slot="button"] svg {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+  }
+
+  .ui-page-title {
+    font-size: var(--ui-text-page-title);
+    line-height: var(--ui-leading-tight);
+    font-weight: 600;
+    letter-spacing: -0.011em;
+    color: var(--foreground);
+  }
+
+  .ui-page-desc {
+    font-size: var(--ui-text-body);
+    line-height: var(--ui-leading-body);
+    color: var(--muted-foreground);
+  }
+
+  .ui-section-title {
+    font-size: var(--ui-text-section-title);
+    line-height: var(--ui-leading-body);
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .ui-body {
+    font-size: var(--ui-text-body);
+    line-height: var(--ui-leading-body);
+  }
+
+  .ui-meta {
+    font-size: var(--ui-text-meta);
+    line-height: var(--ui-leading-body);
+    color: var(--muted-foreground);
+  }
+
+  .ui-num {
+    font-family: var(--font-mono), monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 工具栏：搜索 + 筛选 + 计数同一基线、同一高度 */
+  .ui-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  /* 页面纵向节奏 */
+  .ui-page-stack {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: var(--ui-gap-page);
+  }
+
+  /* 空态：高度受限、图标 24px、一句话说明 */
+  .ui-empty {
+    display: flex;
+    min-height: 120px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    font-size: var(--ui-text-meta);
+    line-height: var(--ui-leading-body);
+    color: var(--muted-foreground);
+  }
+
+  .ui-empty-icon {
+    width: 24px;
+    height: 24px;
+    color: color-mix(in srgb, var(--muted-foreground) 70%, transparent);
+  }
+
+  /* 一层卡片：不要卡片套卡片 */
+  .ui-card {
+    border: 1px solid var(--ui-border-soft);
+    border-radius: var(--ui-radius-card);
+    background: var(--card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .ui-divider {
+    border-top: 1px solid var(--ui-border-soft);
+  }
+}
+
+/* ── 深色可读性修正（对比度实测） ───────────────────────────────
+   1) 分隔符常用 `text-border`（= 边框色）当文字色，深色下 1.42:1 几乎不可见；
+      统一提到「次要文字 55%」这一档，浅色/深色都读得出来，又不会抢正文。
+   2) 通知徽标是 `bg-destructive text-white`，深色下 destructive 提亮成 #ff6b5e，
+      白字只有 ~2.9:1；补一个 destructive-foreground token，深色下用深字。 */
+@layer utilities {
+  .text-border {
+    color: color-mix(in srgb, var(--muted-foreground) 55%, transparent);
+  }
+}
+
+:root {
+  --destructive-foreground: #ffffff;
+}
+
+.dark {
+  /* rose-950：压在 rose-400 档的 destructive 底上，深色下也够对比。 */
+  --destructive-foreground: #4c0519;
+}
+
+/* ── 浅色小字对比度修正（实测 3.0~3.4:1 → 4.5:1 以上） ─────────────
+   品牌色（现 #0369a1 sky-700 文字档）与警告色（amber-700）作为**文字**放在浅色底上；这两个覆盖只在浅色生效，
+   深色保持原亮度（深色底上它们本来就够）。背景填充（bg-primary 等）不受影响。 */
+:root {
+  /* amber-700：令牌表规定的浅底警告文字档，与 --warning-foreground 同源。 */
+  --warning-text: #b45309;
+}
+
+.dark {
+  --warning-text: #fbbf24; /* amber-400 */
+}
+
+:root:not(.dark) .text-primary {
+  color: var(--primary-text);
+}
+
+:root:not(.dark) .text-warning {
+  color: var(--warning-text);
+}
+
+:root:not(.dark) .text-destructive {
+  /* rose-600 与 --destructive 同值：语义色本身已是低饱和 600 档，浅色小字直接复用。 */
+  color: var(--destructive);
+}
+
+/* ── 玻璃拟态 Dock ───────────────────────────────────────────────
+   只让容器与交互底块呈现玻璃层次，保留图标的细线轮廓。
+   颜色由主题令牌混合，切换预设或深色模式时不会留下硬编码色板。 */
+.dock-glass {
+  isolation: isolate;
+  border: 1px solid color-mix(in srgb, var(--card) 82%, var(--primary) 6%);
+  background: linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--card) 82%, transparent),
+    color-mix(in srgb, var(--card) 66%, transparent) 55%,
+    color-mix(in srgb, var(--primary) 4%, var(--card) 65%)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--card) 95%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--primary) 4%, var(--border) 22%),
+    0 14px 34px -18px color-mix(in srgb, var(--foreground) 24%, transparent),
+    0 2px 8px -4px color-mix(in srgb, var(--primary) 10%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+}
+
+/* 一道克制的斜向反光；不遮挡图标，也不接收鼠标事件。 */
+.dock-glass::before {
+  position: absolute;
+  z-index: 0;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    color-mix(in srgb, var(--card) 22%, transparent),
+    transparent 38%,
+    transparent 75%,
+    color-mix(in srgb, var(--primary) 3%, transparent)
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.dark .dock-glass {
+  border-color: color-mix(in srgb, var(--card) 50%, var(--foreground) 12%);
+  background: linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--card) 84%, transparent),
+    color-mix(in srgb, var(--card) 68%, transparent)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--foreground) 10%, transparent),
+    0 16px 40px -16px rgb(0 0 0 / 65%);
+}
+
+.dock-tile {
+  border: 1px solid transparent;
+  background-color: transparent;
+}
+
+.group:hover > .dock-tile,
+.group:focus-visible > .dock-tile {
+  border-color: color-mix(in srgb, var(--card) 62%, var(--border));
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--card) 72%, transparent),
+    color-mix(in srgb, var(--primary) 3%, var(--card) 55%)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--card) 88%, transparent),
+    0 3px 10px -6px color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
+/* 激活态：拟态玻璃的浅蓝凸起，保留内高光与柔和投影。 */
+.dock-tile[data-active="true"],
+.group:hover > .dock-tile[data-active="true"],
+.group:focus-visible > .dock-tile[data-active="true"] {
+  border-color: color-mix(in srgb, var(--primary) 16%, var(--card));
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--primary) 13%, var(--card)),
+    color-mix(in srgb, var(--primary) 6%, var(--card))
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--card) 82%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--primary) 10%, transparent),
+    0 4px 12px -6px color-mix(in srgb, var(--primary) 28%, transparent);
+}
+
+.dock-divider {
+  background: linear-gradient(
+    transparent,
+    color-mix(in srgb, var(--foreground) 17%, transparent) 30%,
+    color-mix(in srgb, var(--foreground) 17%, transparent) 70%,
+    transparent
+  );
+}
+
+.dock-tooltip {
+  border: 1px solid color-mix(in srgb, var(--card) 78%, var(--border) 22%);
+  color: var(--popover-foreground);
+  background: color-mix(in srgb, var(--popover) 84%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--card) 70%, transparent),
+    0 6px 18px -10px color-mix(in srgb, var(--foreground) 30%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+}
+
+.dock-glass button,
+.dock-glass a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .dock-glass {
+    background: var(--card);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Mantine 会为每个 position 渲染一个 fixed 空容器。默认它们仍参与命中测试，
+   铺满视口后会挡住页面点击（登录页密码框点不进去就是这样）。容器只负责定位，
+   真正的通知卡片恢复 pointer-events；顶部偏移只作用于 top-center，避免把
+   bottom-* 容器同时撑成 top + bottom 的全高盒子。 */
+.liora-notifications {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.liora-notifications[data-position="top-center"] {
+  top: 68px;
+}
+
+.liora-notifications > * {
+  pointer-events: auto;
+}
+
+/* 通知卡片：紧凑、中性表面，仅用图标表达语义色。
+   Mantine 的 Notification 样式在 @layer mantine 中，这里保持无层级以稳定覆盖。 */
+.liora-toast {
+  position: relative;
+  width: fit-content;
+  /* 单行标题最多 440px；窄屏直接按视口收窄（通知容器左右各留 16px），
+     不依赖 Mantine TransitionGroup 包装层的 max-content 宽度。 */
+  max-width: min(440px, calc(100vw - 32px));
+  padding: 10px 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  /* 浮层比卡片亮一档：深色下 toast 与页面卡片同色会失去悬浮感。 */
+  background: var(--popover);
+  box-shadow: var(--shadow-popover);
+}
+
+.liora-toast-icon {
+  width: 22px;
+  height: 22px;
+  margin-inline-end: 10px;
+  border-radius: 0;
+  background: transparent;
+  color: var(--notification-color);
+}
+
+.liora-toast-body {
+  min-width: 0;
+}
+
+.liora-toast-title {
+  margin-bottom: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--foreground);
+  /* 默认单行：超出宽度用省略号，完整文案仍在 DOM 中供读屏读取。 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+}
+
+.liora-toast-description {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+  /* 需要换行时按词边界断行；只有超长不可断 token 才在词内断开。 */
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+/* 标题型通知的 description 是空节点，不占行也不留 margin。 */
+.liora-toast-description:empty {
+  display: none;
+}
+
+.liora-toast-close {
+  width: 22px;
+  height: 22px;
+  color: var(--muted-foreground);
+  background: transparent;
+}
+
+.liora-toast-close:hover {
+  color: var(--foreground);
+  background: var(--muted);
+}
